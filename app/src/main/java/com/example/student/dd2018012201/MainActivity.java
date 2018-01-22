@@ -1,5 +1,6 @@
 package com.example.student.dd2018012201;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
@@ -50,8 +51,11 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.rawQuery("Select * from students", null);
         c.moveToFirst();
         Log.d("DB", c.getString(1) + ", " + c.getString(2));
-        c.moveToNext();
-        Log.d("DB", c.getString(1) + ", " + c.getString(2));
+        while (c.moveToNext())
+        {
+            Log.d("DB", c.getString(1) + ", " + c.getString(2));
+        }
+        db.close();
     }
 
     public void click3(View v)
@@ -63,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.rawQuery(strSql, new String[] {"2"});
         c.moveToFirst();
         Log.d("DB", c.getString(1) + ", " + c.getString(2));
+        db.close();
     }
 
     public void click4(View v)
@@ -73,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.query("students", new String[]{"_id", "name", "score"}, null, null, null, null, null);
         c.moveToFirst();
         Log.d("DB", c.getString(1) + ", " + c.getString(2));
+        db.close();
     }
 
     public void click5(View v)
@@ -83,5 +89,28 @@ public class MainActivity extends AppCompatActivity {
         Cursor c = db.query("students", new String[]{"_id", "name", "score"}, "_id=?", new String[]{"2"}, null, null, null);
         c.moveToFirst();
         Log.d("DB", c.getString(1) + ", " + c.getString(2));
+        db.close();
+    }
+
+    public void click6(View v)
+    {
+        File dbFile = new File(getFilesDir(), "student.db");
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(
+                dbFile.getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE);
+        db.execSQL("Insert into students('_id', 'name', 'score') Values(3, 'Bob', 95)");
+        db.close();
+    }
+
+    public void click7(View v)
+    {
+        File dbFile = new File(getFilesDir(), "student.db");
+        SQLiteDatabase db = SQLiteDatabase.openDatabase(
+                dbFile.getAbsolutePath(), null, SQLiteDatabase.OPEN_READWRITE);
+        ContentValues cv = new ContentValues();
+        cv.put("_id", 4);
+        cv.put("name", "Mary");
+        cv.put("score", 90);
+        db.insert("students", null, cv);
+        db.close();
     }
 }
